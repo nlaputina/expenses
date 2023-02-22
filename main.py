@@ -1,12 +1,10 @@
 
-import re
-from datetime import datetime
 
 
 def parsing_csv():
     import csv
 
-    with open('TransactionHistory.csv', 'r') as csv_file:
+    with open('statement/management/commands/TransactionHistory.csv', 'r') as csv_file:
         reader = csv.DictReader(csv_file, delimiter=',')
         list_of_dict = list(reader)
         short_list_of_dict = []
@@ -15,10 +13,6 @@ def parsing_csv():
             short_list_of_dict.append(new_dict)
         csv_file.close()
         return short_list_of_dict
-
-
-parsing_csv()
-
 
 def find_a_date(list_of_dict):
     for position in list_of_dict:
