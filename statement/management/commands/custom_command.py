@@ -35,9 +35,12 @@ class Command(BaseCommand):
                     convert_date = datetime.strptime(position['Date'], "%d/%m/%Y").strftime('%Y-%m-%d')
                     position['Date'] = convert_date
 
+            Expenses.objects.all().delete()
             for position in short_list_of_dict:
-                note = Expenses(date=position['Date'], description=position['Description'], amount=position['Amount'])
+                amount = position['Amount'].replace(',', '.')
+                note = Expenses(date=position['Date'], description=position['Description'], amount=amount)
                 note.save()
 
             self.stdout.write('Done!')
+            self.stdout.write('Renovate the code!')
 
