@@ -1,10 +1,19 @@
 from django.db import models
 
 
+class Tag(models.Model):
+    name = models.CharField(max_length=288)
+    key_words = models.CharField(max_length=288)
+
+    def __str__(self):
+        return self.name
+
+
 class Expenses(models.Model):
     date = models.DateField()
     description = models.CharField(max_length=288)
     amount = models.CharField(max_length=288)
+    tags = models.ForeignKey(Tag, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.description
@@ -28,5 +37,4 @@ class Income(models.Model):
     def __str__(self):
         return self.description
 
-#
-# class Category(models.Model):
+
