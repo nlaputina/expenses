@@ -1,7 +1,7 @@
 import csv
 from csv import DictReader
 from django.core.management.base import BaseCommand
-from statement.models import Expenses
+from statement.models import Expenses, Tag
 
 import re
 from datetime import datetime
@@ -38,6 +38,9 @@ class Command(BaseCommand):
             Expenses.objects.all().delete()
             for position in short_list_of_dict:
                 amount = position['Amount'].replace(',', '.')
+                if amount.count('.') > 1:
+                    amount = amount.replace('.', '', 1)
+
                 note = Expenses(date=position['Date'], description=position['Description'], amount=amount)
                 note.save()
 

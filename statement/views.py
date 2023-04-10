@@ -6,14 +6,6 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import Expenses
 
 
-@csrf_exempt
-def show_list_expenses(request):
-    qs = Expenses.objects.all()
-    qs_period = show_list_for_period(request, qs)
-    qs_category = list_on_categories(request, qs_period)
-    return JsonResponse([note.to_dict() for note in list(qs_category)], safe=False)
-
-
 def show_list_for_period(request, qs):
     start_point = request.GET.get('start_point')
     final_point = request.GET.get('final_point')
@@ -44,3 +36,20 @@ def list_on_categories(request, qs_period):
 
     return qs_category
 
+def sum_of_transactions(qs_category):
+    sum = 0
+    for note in list(qs_category):
+        sum += float(note.amount)
+    return sum
+
+
+@csrf_exempt
+def show_list_expenses(request):
+    qs = Expenses.objects.all()
+    qs_period = show_list_for_period(request, qs)
+    qs_category = list_on_categories(request, qs_period)
+    number_of_operations = qs_category.count()
+    sum = sum_of_transactions(qs_category)
+    dict_to_show = {'total_num': number_of_operations, 'sum': sum, 'items': [note.to_dict() for note in list(qs_category)]}
+
+    return JsonResponse(dict_to_show)
