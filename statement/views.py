@@ -1,9 +1,9 @@
 from django.http import JsonResponse
 from django.db.models import Q
-from django.shortcuts import render
+
 
 from django.views.decorators.csrf import csrf_exempt
-from .models import Expenses
+from .models import Expenses, Tag
 
 
 def show_list_for_period(request, qs):
@@ -36,6 +36,16 @@ def list_on_categories(request, qs_period):
 
     return qs_category
 
+
+def show_expenses_by_tag(request):
+    tag_id = request.GET.get('tag_id')
+    qs = Expenses.objects.filter(tags=tag_id)
+    tag_interested = Tag.objects.get(id=tag_id)
+    dict_by_tag = {tag_interested.name: [expense.to_dict() for expense in qs]}
+
+    return JsonResponse(dict_by_tag, safe=False)
+
+
 def sum_of_transactions(qs_category):
     sum = 0
     for note in list(qs_category):
@@ -53,3 +63,13 @@ def show_list_expenses(request):
     dict_to_show = {'total_num': number_of_operations, 'sum': sum, 'items': [note.to_dict() for note in list(qs_category)]}
 
     return JsonResponse(dict_to_show)
+
+
+def show_list_tags(request):
+    qs = Tag.objects.all()
+    dict_to_show = {'items': [item.to_dict() for item in qs]}
+
+    return JsonResponse(dict_to_show)
+
+
+
