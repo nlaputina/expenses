@@ -39,12 +39,15 @@ def list_on_categories(request, qs_period):
 
 def show_expenses_by_tag(request):
     tag_id = request.GET.get('tag_id')
-    qs = Expenses.objects.filter(tags=tag_id)
-    tag_interested = Tag.objects.get(id=tag_id)
-    dict_by_tag = {tag_interested.name: [expense.to_dict() for expense in qs]}
+    if Tag.objects.filter(id=tag_id).exists():
+        qs = Expenses.objects.filter(tags=tag_id)
+        tag_interested = Tag.objects.get(id=tag_id)
+        dict_by_tag = {tag_interested.name: [expense.to_dict() for expense in qs]}
 
-    return JsonResponse(dict_by_tag, safe=False)
+        return JsonResponse(dict_by_tag, safe=False)
+    else:
 
+        return show_list_tags(request)
 
 def sum_of_transactions(qs_category):
     sum = 0
