@@ -9,13 +9,11 @@ class Tag(models.Model):
         return self.name
 
     def to_dict(self):
-        tags_info = {
+        return {
             'tag_id': self.id,
             'name': self.name,
             'key_words': self.key_words,
         }
-
-        return tags_info
 
 
 class Expenses(models.Model):
@@ -31,13 +29,12 @@ class Expenses(models.Model):
         ordering = ['date']
 
     def to_dict(self):
-        expenses_info = {
+        return {
             'date': self.date,
             'description': self.description,
             'amount': self.amount,
-            'tags': [tag.name for tag in self.tags.all()]
+            'tags': list(self.tags.values_list('name', flat=True))
         }
-        return expenses_info
 
 
 class Income(models.Model):

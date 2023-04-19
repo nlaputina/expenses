@@ -10,10 +10,6 @@ from datetime import datetime
 class Command(BaseCommand):
     help = 'Load data from csv-file'
 
-    def add_arguments(self, parser):
-        # parser.add_argument('filename', nargs='+', type=str, help='filename for csv file')
-        pass
-
     def handle(self, *args, **options):
         with open('/Users/natalia/Natalia_projects/expenses/statement/management/commands/TransactionHistory.csv', 'r') as csv_file:
             reader = csv.DictReader(csv_file, delimiter=',')
