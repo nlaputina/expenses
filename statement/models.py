@@ -8,6 +8,13 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
 
+    def to_dict(self):
+        return {
+            'tag_id': self.id,
+            'name': self.name,
+            'key_words': self.key_words,
+        }
+
 
 class Expenses(models.Model):
     date = models.DateField()
@@ -22,12 +29,12 @@ class Expenses(models.Model):
         ordering = ['date']
 
     def to_dict(self):
-        expenses_info = {
+        return {
             'date': self.date,
             'description': self.description,
-            'amount': self.amount
+            'amount': self.amount,
+            'tags': list(self.tags.values_list('name', flat=True))
         }
-        return expenses_info
 
 
 class Income(models.Model):
@@ -36,5 +43,3 @@ class Income(models.Model):
 
     def __str__(self):
         return self.description
-
-
